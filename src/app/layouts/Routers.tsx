@@ -1,0 +1,119 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
+
+import { Routes, Route } from "react-router-dom"
+import { lazy, Suspense } from "react";
+import DefaultLayout from "@/app/layouts/DefaultLayout";
+import InvestLayout from "@/app/layouts/InvestLayout";
+import { DEFAULT_LAYOUT,INVEST_LAYOUT } from "@/constants/layout";
+import URL from "@/constants/url";
+
+const Home = lazy(() => import("@/app/pages/home"));
+const Spend = lazy(() => import("@/app/pages/home/Spend"));
+const Total = lazy(() => import("@/app/pages/investment/Total"));
+const Accumulate = lazy(() => import("@/app/pages/investment/Accumulate"));
+const FundCertificate = lazy(() => import("@/app/pages/investment/FundCertificate"));
+const Gold = lazy(() => import("@/app/pages/investment/Gold"));
+const Income = lazy(() => import("@/app/pages/home/Income"));
+const Lend = lazy(() => import("@/app/pages/home/Lend"));
+const Bank = lazy(() => import("@/app/pages/home/Banktransaction"));
+const Log = lazy(() => import("@/app/pages/home/Transactionlog"));
+const Notification = lazy(() => import("@/app/pages/notifications"));
+const Market = lazy(() => import("@/app/pages/market"));
+
+const menuInvest = [
+  {
+    key: URL.Total,
+    components: <Total/>,
+    layout: INVEST_LAYOUT,
+    private: true,
+  },
+  {
+    key: URL.Accumulate,
+    components: <Accumulate/>,
+    layout: INVEST_LAYOUT,
+    private: true,
+  },
+  {
+    key: URL.FundCertificate,
+    components: <FundCertificate/>,
+    layout: INVEST_LAYOUT,
+    private: true,
+  },
+  {
+    key: URL.Gold,
+    components: <Gold/>,
+    layout: INVEST_LAYOUT,
+    private: true,
+  }
+];
+const menuDefault = [
+  {
+    key: URL.Market,
+    components: <Market/>,
+    layout: DEFAULT_LAYOUT,
+    private: true,
+  },
+  {
+    key: URL.Home,
+    components: <Home/>,
+    layout: DEFAULT_LAYOUT,
+    private: true,
+  },
+  {
+    key: URL.Spend,
+    components: <Spend/>,
+    layout: DEFAULT_LAYOUT,
+    private: true,
+  },
+  {
+    key: URL.Income,
+    components: <Income/>,
+    layout: DEFAULT_LAYOUT,
+    private: true,
+  },
+  {
+    key: URL.Lend,
+    components: <Lend/>,
+    layout: DEFAULT_LAYOUT,
+    private: true,
+  },
+  {
+    key: URL.Bank,
+    components: <Bank/>,
+    layout: DEFAULT_LAYOUT,
+    private: true,
+  },
+  {
+    key: URL.Log,
+    components: <Log/>,
+    layout: DEFAULT_LAYOUT,
+    private: true,
+  },
+  {
+    key: URL.Notification,
+    components: <Notification/>,
+    layout: DEFAULT_LAYOUT,
+    private: true,
+  },
+];
+const menus = [...menuInvest, ...menuDefault];
+const Routers = () => {
+  return (
+    <Routes>
+      {menus.map((item: any) => {
+        let element = item.components;
+        element = <Suspense fallback={null}>{element}</Suspense>
+        if (item.layout === DEFAULT_LAYOUT){
+          element = <DefaultLayout>{element}</DefaultLayout>
+        }
+        if (item.layout === INVEST_LAYOUT){
+          element = <InvestLayout>{element}</InvestLayout>
+        }
+        return (
+          <Route key={item.key} path={item.key} element={element} />
+        )
+      })}
+    </Routes>
+  )
+}
+export default Routers
