@@ -110,6 +110,9 @@
  .b_g {
   background-color: rgba(255, 175, 0, 1);
  }
+ .b_r50 {
+  border-radius: 50%;
+ }
  .b_r20 {
   border-radius: 20px;
  }

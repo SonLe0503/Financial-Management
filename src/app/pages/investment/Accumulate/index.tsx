@@ -4,6 +4,8 @@ import { Button } from "@mui/material";
 import { More } from "@mui/icons-material";
 import SearchIcon from "@mui/icons-material/Search";
 import { useState } from "react";
+import AddAccumulate from "@/app/components/modal/accumulate/AddAccumulate";
+import ModifileAccumulate from "@/app/components/modal/accumulate/ModifileAccumulate";
 
 const ACCUMULATE_DATA = [
   { id: 1, image: logo_coin, type: "Tích luỹ không kỳ hạn ", center: "5%/năm" },
@@ -31,6 +33,8 @@ const ACCUMULATE_DATA = [
 
 const Accumulate = () => {
   const [search, setSearch] = useState("");
+  const [openAddAccumulate, setOpenAddAccumulate] = useState(false);
+  const [openModifileAccumulate, setOpenModifileAccumulate] = useState(false);
   const filteredData = ACCUMULATE_DATA.filter((item) => {
     const matchesSearch = item.type.toLocaleLowerCase().includes(search.trim().toLocaleLowerCase());
     return matchesSearch;
@@ -54,7 +58,7 @@ const Accumulate = () => {
             <div className="d_f j_cs a_i p_l10 p_r10">
               <div className="f_s20">Danh sách sản phẩm tích luỹ</div>
               <div>
-                <Button variant="contained" size="small">
+                <Button variant="contained" size="small" onClick={() => setOpenAddAccumulate(true)}>
                   Thêm
                 </Button>
                 &nbsp;
@@ -85,7 +89,7 @@ const Accumulate = () => {
                       <Button variant="contained" size="small">
                         Rút
                       </Button>
-                      <More className="p_l10" />
+                      <More className="p_l10" onClick={() => setOpenModifileAccumulate(true)} />
                     </div>
                   </div>
                 </div>
@@ -94,6 +98,14 @@ const Accumulate = () => {
           </div>
         </div>
       </div>
+      <AddAccumulate
+        open={openAddAccumulate}
+        setOpen={setOpenAddAccumulate}
+      />
+      <ModifileAccumulate
+        open={openModifileAccumulate}
+        setOpen={setOpenModifileAccumulate}
+      />
     </>
   );
 };

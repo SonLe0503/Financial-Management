@@ -5,10 +5,12 @@ import dayjs from "dayjs";
 import { useState } from "react";
 import { DatePickerV2 as DatePicker } from "@/app/components/common/DatePickerV2";
 import { Button } from "@mui/material";
+import ImageIcon from "@mui/icons-material/Image";
 import lend140 from "@/assets/images/lend/lend_140.png";
 import lend141 from "@/assets/images/lend/lend_141.png";
 import lenddebt from "@/assets/images/lend/lend_debt.png";
 import lendloan from "@/assets/images/lend/lend_loan.png";
+import ImageFileSelect from "@/app/components/modal/ImageFileSelect";
 
 
 const LEND = [
@@ -26,6 +28,9 @@ const Lend = () => {
     name: "Chọn nhóm",
     image: "",
   });
+
+  const [openImageSelect, setOpenImageSelect] = useState<boolean>(false);
+
   const handleSelectOption = (name: string, image: any) => {
     setInput({...input, name, image});
   }
@@ -37,19 +42,15 @@ const Lend = () => {
           <div className="d_f p_t20 w_100 j_cs">
             <div className="w_48 b_g b_r20 ">
               <div className="p_20 d_fc">
-                <div className="b_gw p_20 b_r15">
-                  <input className=" w_100" placeholder="Nhập số tiền" value={input.money} onChange={(e) => setInput({...input, money: e.target.value})} />
-                </div>
+                  <input className="p_20 b_r15" placeholder="Nhập số tiền" value={input.money} onChange={(e) => setInput({...input, money: e.target.value})} />
                 <div className="p_10 b_r15 m_t5 d_f a_i b_gw">
-                  <img className="s_40" src={input.image} />
+                  <img className="s_40 b_r50 b_g" src={input.image} />
                   <div className="p_l10">{input.name}</div>
                 </div>
-                <div className="b_gw p_20 b_r15 m_t5">
-                  <input className=" w_100" placeholder="Thêm ghi chú" value={input.note} onChange={(e) => setInput({...input, note: e.target.value})} />
-                </div>
+                  <input className="p_20 b_r15 m_t5" placeholder="Thêm ghi chú" value={input.note} onChange={(e) => setInput({...input, note: e.target.value})} />
                 <div className="b_gw p_10 b_r15 m_t5">
                   <LocalizationProvider dateAdapter={AdapterDayjs}>
-                    <DatePicker
+                    <DatePicker className="w_100"
                       value={input.date ? dayjs(input.date) : null}
                       onChange={(date: string) => {
                         if (date) {
@@ -59,27 +60,15 @@ const Lend = () => {
                     />
                   </LocalizationProvider>
                 </div>
-                <input
-                  className="p_20 b_r15 m_t5 b_gw"
-                  type="file"
-                  onChange={(e: any) => {
-                    setInput({...input, imageFile: e.target.files[0]});
-                  }}
-                  placeholder="Thêm hình ảnh"
-                />
-                {input.imageFile && (
-                  <div>
-                    <img
-                      src={URL.createObjectURL(input.imageFile)}
-                      alt="not found"
-                      width={"250px"}
-                    />
-                    <br /> <br />
-                    <button onClick={() => setInput({...input, imageFile: null})}>
-                      Remove
-                    </button>
-                  </div>
-                )}
+                <button
+                  className="p_20 b_r15 m_t5 b_gw a_i d_f"
+                  onClick={() => setOpenImageSelect(true)}
+                >
+                  {
+                    input.imageFile !== null ? <ImageIcon /> : ("")
+                  }
+                  Thêm hình ảnh
+                </button>
               </div>
             </div>
             <div className="w_48 b_g b_r20">
@@ -99,10 +88,16 @@ const Lend = () => {
             </div>
           </div>
           <div className="p_t20">
-            <Button variant="contained">Lưu</Button>
+            <Button variant="contained" className="w_48">Lưu</Button>
           </div>
         </div>
       </div>
+      <ImageFileSelect
+        open={openImageSelect}
+        setOpen={setOpenImageSelect}
+        input={input}
+        setInput={setInput}
+      />
     </>
   );
 };

@@ -3,6 +3,8 @@ import SearchIcon from "@mui/icons-material/Search";
 import { Button } from "@mui/material";
 import { More } from "@mui/icons-material";
 import { useState } from "react";
+import AddCertificate from "@/app/components/modal/fundcertificate/AddCertificate";
+import ModifileCertificate from "@/app/components/modal/fundcertificate/ModifileCertificate";
 
 const FUND_CERTIFICATE_DATA = [
   {
@@ -62,6 +64,8 @@ const FUND_CERTIFICATE_DATA = [
 ];
 
 const FundCertificate = () => {
+  const [openAddCertificate, setOpenAddCertificate] = useState(false);
+  const [openModifileCertificate, setOpenModifileCertificate] = useState(false);
   const [searchCode, setSearchCode] = useState("");
   const [searchName, setSearchName] = useState("");
   const filteredData = FUND_CERTIFICATE_DATA.filter((item) => {
@@ -101,7 +105,7 @@ const FundCertificate = () => {
             <div className="d_f j_cs a_i p_l10 p_r10">
               <div className="f_s20">Danh sách sản phẩm Chứng chỉ quỹ</div>
               <div>
-                <Button variant="contained" size="small">
+                <Button variant="contained" size="small" onClick={() => setOpenAddCertificate(true)}>
                   Thêm
                 </Button>
                 &nbsp;
@@ -141,7 +145,7 @@ const FundCertificate = () => {
                     </div>
                     <div className="d_f a_i">
                       <Button variant="contained">Bán</Button>
-                      <More className="p_l10" />
+                      <More className="p_l10" onClick={() => setOpenModifileCertificate(true)} />
                     </div>
                   </div>
                 </div>
@@ -150,6 +154,14 @@ const FundCertificate = () => {
           </div>
         </div>
       </div>
+      <AddCertificate
+        open={openAddCertificate}
+        setOpen={setOpenAddCertificate}
+      />
+      <ModifileCertificate
+        open={openModifileCertificate}
+        setOpen={setOpenModifileCertificate}
+      />
     </>
   );
 };

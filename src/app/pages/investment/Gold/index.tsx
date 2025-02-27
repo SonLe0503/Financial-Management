@@ -3,7 +3,8 @@ import SearchIcon from "@mui/icons-material/Search";
 import { Button } from "@mui/material";
 import { More } from "@mui/icons-material";
 import { useState } from "react";
-
+import AddGold from "@/app/components/modal/gold/AddGold";
+import ModifileGold from "@/app/components/modal/gold/ModifileGold";
 const GOLD_DATA = [
   {
     id: 1,
@@ -61,6 +62,8 @@ const GOLD_DATA = [
   },
 ];
 const Gold = () => {
+  const [openAddGold, setOpenAddGold] = useState(false);
+  const [openModifileGold, setOpenModifileGold] = useState(false);
   const [search, setSearch] = useState("");
   const filteredData = GOLD_DATA.filter((item) => {
     const matchesSearch = item.name.toLocaleLowerCase().includes(search.trim().toLocaleLowerCase());
@@ -80,7 +83,7 @@ const Gold = () => {
             <div className="d_f j_cs a_i">
               <div className="f_s20">Danh sách sản phẩm Vàng</div>
               <div>
-                <Button variant="contained" size="small">
+                <Button variant="contained" size="small" onClick={() => setOpenAddGold(true)}>
                   Thêm
                 </Button>
                 &nbsp;
@@ -120,7 +123,7 @@ const Gold = () => {
                     </div>
                     <div className="d_f a_i">
                       <Button variant="contained">Bán</Button>
-                      <More className="p_l10" />
+                      <More className="p_l10" onClick={() => setOpenModifileGold(true)} />
                     </div>
                   </div>
                 </div>
@@ -129,6 +132,14 @@ const Gold = () => {
           </div>
         </div>
       </div>
+      <AddGold
+        open={openAddGold}
+        setOpen={setOpenAddGold}
+      />
+      <ModifileGold
+        open={openModifileGold}
+        setOpen={setOpenModifileGold}
+      />
     </>
   );
 };

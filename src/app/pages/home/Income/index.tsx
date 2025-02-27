@@ -1,6 +1,7 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import { LocalizationProvider } from "@mui/x-date-pickers";
 import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
+import ImageIcon from "@mui/icons-material/Image";
 import dayjs from "dayjs";
 import { useState } from "react";
 import { DatePickerV2 as DatePicker } from "@/app/components/common/DatePickerV2";
@@ -9,6 +10,7 @@ import income143 from "@/assets/images/income/income_143.png";
 import incomeinterestmoney from "@/assets/images/income/income_interestmoney.png";
 import incomeother from "@/assets/images/income/income_other.png";
 import incomesalary from "@/assets/images/income/income_salary.png";
+import ImageFileSelect from "@/app/components/modal/ImageFileSelect";
 
 const SP = [
   { id: 1, image: income143, name: "Tiền chuyển đến" },
@@ -25,9 +27,12 @@ const Income = () => {
     date: "",
     imageFile: null,
   });
-  const handleSelectOption = (name: string, image: any) => {
+  console.log(input.imageFile);
+  const [openImageSelect, setOpenImageSelect] = useState<boolean>(false);
+
+const handleSelectOption = (name: string, image: any) => {
     setInput({ ...input, name, image });
-  };
+};
   return (
     <>
       <div className="p_40">
@@ -40,7 +45,7 @@ const Income = () => {
                   <input className=" w_100" placeholder="Nhập số tiền" value={input.money} onChange={(e) => setInput({...input, money: e.target.value})} />
                 </div>
                 <div className="p_10 b_r15 m_t5 d_f a_i b_gw">
-                  <img className="s_40" src={input.image} />
+                  <img className="s_40 b_r50 b_g" src={input.image} />
                   <div className="p_l10">{input.name}</div>
                 </div>
                 <div className="b_gw p_20 b_r15 m_t5">
@@ -48,7 +53,7 @@ const Income = () => {
                 </div>
                 <div className="b_gw p_10 b_r15 m_t5">
                   <LocalizationProvider dateAdapter={AdapterDayjs}>
-                    <DatePicker
+                    <DatePicker className="w_100"
                       value={input.date ? dayjs(input.date) : null}
                       onChange={(date: string) => {
                         if (date) {
@@ -61,27 +66,15 @@ const Income = () => {
                     />
                   </LocalizationProvider>
                 </div>
-                <input
-                  className="p_20 b_r15 m_t5 b_gw"
-                  type="file"
-                  onChange={(e: any) => {
-                    setInput({...input, imageFile: e.target.files[0]});
-                  }}
-                  placeholder="Thêm hình ảnh"
-                />
-                {input.imageFile && (
-                  <div>
-                    <img
-                      src={URL.createObjectURL(input.imageFile)}
-                      alt="not found"
-                      width={"250px"}
-                    />
-                    <br /> <br />
-                    <button onClick={() => setInput({...input, imageFile: null})}>
-                      Remove
-                    </button>
-                  </div>
-                )}
+                <button
+                  className="p_20 b_r15 m_t5 b_gw a_i d_f"
+                  onClick={() => setOpenImageSelect(true)}
+                >
+                  {
+                    input.imageFile !== null ? <ImageIcon /> : ("")
+                  }
+                  Thêm hình ảnh
+                </button>
               </div>
             </div>
             <div className="w_48 b_g b_r20">
@@ -101,10 +94,16 @@ const Income = () => {
             </div>
           </div>
           <div className="p_t20">
-            <Button variant="contained">Lưu</Button>
+            <Button variant="contained" className="w_48">Lưu</Button>
           </div>
         </div>
       </div>
+      <ImageFileSelect
+        open={openImageSelect}
+        setOpen={setOpenImageSelect}
+        input={input}
+        setInput={setInput}
+      />
     </>
   );
 };

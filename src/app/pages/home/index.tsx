@@ -4,7 +4,7 @@ import logo_chungchiquy from "@/assets/images/logo/logo_chungchiquy.png";
 import logo_coin from "@/assets/images/logo/logo_coin.png";
 import logo_vang from "@/assets/images/logo/logo_vang.png";
 import { Button } from "@mui/material";
-import { Line } from "react-chartjs-2";
+// import { Line } from "react-chartjs-2";
 import {
   Chart as ChartJS,
   CategoryScale,
@@ -31,26 +31,26 @@ ChartJS.register(
 );
 
 
-const data = {
-  labels: ["1/2", "2/2", "3/2", "4/2", "5/2", "6/2"],
-  datasets: [
-    {
-      label: "Tổng chi tiêu tháng",
-      data: [0, 1000000, 400, 700, 600, 900],
-      borderColor: " rgba(255, 42, 0, 1)",
-      backgroundColor: "rgba(75, 192, 192, 0.2)",
-      tension: 0.4,
-    },
-  ],
-};
+// const data = {
+//   labels: ["1/2", "2/2", "3/2", "4/2", "5/2", "6/2"],
+//   datasets: [
+//     {
+//       label: "Tổng chi tiêu tháng",
+//       data: [0, 1000000, 400, 700, 600, 900],
+//       borderColor: " rgba(255, 42, 0, 1)",
+//       backgroundColor: "rgba(75, 192, 192, 0.2)",
+//       tension: 0.4,
+//     },
+//   ],
+// };
 
-const options = {
-  responsive: true,
-  plugins: {
-    legend: { position: "top" },
-    title: { display: true, text: "Biểu đồ chi tiêu" },
-  },
-};
+// const options = {
+//   responsive: true,
+//   plugins: {
+//     legend: { position: "top" },
+//     title: { display: true, text: "Biểu đồ chi tiêu" },
+//   },
+// };
 const Home = () => {
   const navigate = useNavigate();
   return (
@@ -263,7 +263,7 @@ const Home = () => {
                 <div className="h_100 p_t8">
                   <div className="h_100 b_r15">
                     <div className="p_10">
-                      <Line data={data} options={options} />
+                      {/* <Line data={data} options={options} /> */}
                     </div>
                   </div>
                 </div>
