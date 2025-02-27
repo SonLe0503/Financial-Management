@@ -12,7 +12,9 @@ import { useEffect, useState } from "react";
 const URL = [
   {id: 1, path: "/", menu: "home"},
   {id: 2, path: "/investment/assets/total", menu: "investment"},
-  {id: 3, path: "/market", menu: "market"},
+  {id: 3, path: "/investment/assets/accumulate", menu: "investment"},
+  {id: 4, path: "/investment/assets/fundcertificate", menu: "investment"},
+  {id: 5, path: "/investment/assets/gold", menu: "investment"},
 ]
 
 const Slidebar = () => {
@@ -25,7 +27,7 @@ const Slidebar = () => {
 
   useEffect(() => {
     const path = location.pathname;
-    const menu = URL.find((item) => item.path === path);
+    const menu = URL.find((item) => item.path.includes(path));
     if (menu) {
       setActiveMenu(menu.menu);
     }

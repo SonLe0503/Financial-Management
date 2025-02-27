@@ -6,6 +6,7 @@ import SearchIcon from "@mui/icons-material/Search";
 import { useState } from "react";
 import AddAccumulate from "@/app/components/modal/accumulate/AddAccumulate";
 import ModifileAccumulate from "@/app/components/modal/accumulate/ModifileAccumulate";
+import CashOutAccumulate from "@/app/components/modal/accumulate/CashOutAccumulate";
 
 const ACCUMULATE_DATA = [
   { id: 1, image: logo_coin, type: "Tích luỹ không kỳ hạn ", center: "5%/năm" },
@@ -34,6 +35,7 @@ const ACCUMULATE_DATA = [
 const Accumulate = () => {
   const [search, setSearch] = useState("");
   const [openAddAccumulate, setOpenAddAccumulate] = useState(false);
+  const [openCashOutAccumulate, setOpenCashOutAccumulate] = useState(false);
   const [openModifileAccumulate, setOpenModifileAccumulate] = useState(false);
   const filteredData = ACCUMULATE_DATA.filter((item) => {
     const matchesSearch = item.type.toLocaleLowerCase().includes(search.trim().toLocaleLowerCase());
@@ -86,7 +88,7 @@ const Accumulate = () => {
                       <div>{item.center}</div>
                     </div>
                     <div className="d_f a_i">
-                      <Button variant="contained" size="small">
+                      <Button variant="contained" size="small" onClick={() => setOpenCashOutAccumulate(true)}>
                         Rút
                       </Button>
                       <More className="p_l10" onClick={() => setOpenModifileAccumulate(true)} />
@@ -105,6 +107,10 @@ const Accumulate = () => {
       <ModifileAccumulate
         open={openModifileAccumulate}
         setOpen={setOpenModifileAccumulate}
+      />
+      <CashOutAccumulate
+        open={openCashOutAccumulate}
+        setOpen={setOpenCashOutAccumulate}
       />
     </>
   );

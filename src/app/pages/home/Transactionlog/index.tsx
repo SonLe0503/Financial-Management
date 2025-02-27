@@ -173,16 +173,16 @@ const Log = () => {
                     <div className="m_t5">Số tiền: </div>
                     <div className="m_t5">Loại tiền: </div>
                     <div className="m_t5">Ghi chú: </div>
-                    <div className="m_t5 d_f">
+                    <div className="m_t5 d_fc">
                       <div>Hình ảnh: </div>
-                      <div>
-                        <img src={fooddrink} className="s_image_log p_l10" />
+                      <div className="b_r15 b_1 w_50 t_a">
+                        <img src={fooddrink} className="s_image_log b_g" />
                       </div>
                     </div>
                   </div>
                   <div className="p_t20 d_f j_cs">
-                    <Button className="w_48" variant="contained">Sửa</Button>
-                    <Button className="w_48" variant="outlined" color="error">Xoá</Button>
+                    <Button className="w_48" variant="contained" color="success">Sửa</Button>
+                    <Button className="w_48" variant="contained" color="error">Xoá</Button>
                   </div>
                 </div>
               </div>

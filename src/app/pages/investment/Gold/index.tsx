@@ -5,6 +5,7 @@ import { More } from "@mui/icons-material";
 import { useState } from "react";
 import AddGold from "@/app/components/modal/gold/AddGold";
 import ModifileGold from "@/app/components/modal/gold/ModifileGold";
+import SellGold from "@/app/components/modal/gold/SellGold";
 const GOLD_DATA = [
   {
     id: 1,
@@ -64,6 +65,7 @@ const GOLD_DATA = [
 const Gold = () => {
   const [openAddGold, setOpenAddGold] = useState(false);
   const [openModifileGold, setOpenModifileGold] = useState(false);
+  const [openSellGold, setOpenSellGold] = useState(false);
   const [search, setSearch] = useState("");
   const filteredData = GOLD_DATA.filter((item) => {
     const matchesSearch = item.name.toLocaleLowerCase().includes(search.trim().toLocaleLowerCase());
@@ -72,7 +74,7 @@ const Gold = () => {
   return (
     <>
       <div className="p_20">
-        <div className="b_gw p_20 b_r20 d_fc">
+        <div className="b_gw p_t20 b_r20 d_fc">
           <div className="d_fc a_i ">
             <div className="b_1 p_10 b_r15 d_f m_h500p w_100">
               <input className="search w_100" placeholder="Tìm kiếm " value={search} onChange={(e) => setSearch(e.target.value)} />
@@ -80,7 +82,7 @@ const Gold = () => {
             </div>
           </div>
           <div className="p_20">
-            <div className="d_f j_cs a_i">
+            <div className="d_f j_cs a_i p_l10 p_r10">
               <div className="f_s20">Danh sách sản phẩm Vàng</div>
               <div>
                 <Button variant="contained" size="small" onClick={() => setOpenAddGold(true)}>
@@ -122,7 +124,7 @@ const Gold = () => {
                       <div>7.1%</div>
                     </div>
                     <div className="d_f a_i">
-                      <Button variant="contained">Bán</Button>
+                      <Button variant="contained" size="small" onClick={() => setOpenSellGold(true)}>Bán</Button>
                       <More className="p_l10" onClick={() => setOpenModifileGold(true)} />
                     </div>
                   </div>
@@ -139,6 +141,10 @@ const Gold = () => {
       <ModifileGold
         open={openModifileGold}
         setOpen={setOpenModifileGold}
+      />
+      <SellGold
+        open={openSellGold}
+        setOpen={setOpenSellGold}
       />
     </>
   );

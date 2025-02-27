@@ -5,10 +5,10 @@ import dayjs from "dayjs";
 import { useState } from "react";
 import { Button } from "@mui/material";
 const Total = () => {
-  const [selectedDate, setSelectedDate] = useState<string>("");
+  const [selectedDateStart, setSelectedDateStart] = useState<string>("");
+  const [selectedDateEnd, setSelectedDateEnd] = useState<string>("");
   return (
     <>
-      
       <div className="p_20">
         <div className="b_gw d_f j_cs b_r15">
           <div className="p_10 ">
@@ -22,10 +22,10 @@ const Total = () => {
           <div className=" p_10 d_f">
             <LocalizationProvider dateAdapter={AdapterDayjs}>
               <DatePicker
-                value={selectedDate ? dayjs(selectedDate) : null}
+                value={selectedDateStart ? dayjs(selectedDateStart) : null}
                 onChange={(date: string) => {
                   if (date) {
-                    setSelectedDate(dayjs(date).format("YYYY-MM-DD"));
+                    setSelectedDateStart(dayjs(date).format("YYYY-MM-DD"));
                   }
                 }}
               />
@@ -33,10 +33,10 @@ const Total = () => {
             &nbsp;
             <LocalizationProvider dateAdapter={AdapterDayjs}>
               <DatePicker
-                value={selectedDate ? dayjs(selectedDate) : null}
+                value={selectedDateEnd ? dayjs(selectedDateEnd) : null}
                 onChange={(date: string) => {
                   if (date) {
-                    setSelectedDate(dayjs(date).format("YYYY-MM-DD"));
+                    setSelectedDateEnd(dayjs(date).format("YYYY-MM-DD"));
                   }
                 }}
               />
@@ -87,10 +87,16 @@ const Total = () => {
                 <div className="b_g p_10 b_r15 m_t5">
                   <div>Home</div>
                 </div>
+                <div className="b_g p_10 b_r15 m_t5">
+                  <div>Home</div>
+                </div>
+                <div className="b_g p_10 b_r15 m_t5">
+                  <div>Home</div>
+                </div>
               </div>
               <div className="p_t8">
                 <div className="b_r15 t_a">
-                  <Button variant="outlined">Xem tất cả </Button>
+                  <Button variant="outlined" size="small">Xem tất cả </Button>
                 </div>
               </div>
             </div>

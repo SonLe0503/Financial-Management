@@ -4,18 +4,32 @@ import logo_chungchiquy from "@/assets/images/logo/logo_chungchiquy.png";
 import logo_vang from "@/assets/images/logo/logo_vang.png";
 import logo_coin from "@/assets/images/logo/logo_coin.png";
 import "@/styles/menuinvest.css";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
+
+const URL = [
+  {id: 1, path: "/investment/assets/total", menu: "total"},
+  {id: 2, path: "/investment/assets/accumulate", menu: "tichluy"},
+  {id: 3, path: "/investment/assets/fundcertificate", menu: "chungchiquy"},
+  {id: 4, path: "/investment/assets/gold", menu: "vang"},
+]
+
 const MenuInvest = () => {
   const navigate = useNavigate();
   const [active, setActive] = useState<string>("total");
   const handleChangeMenuInvest = (menu: string, path: string) => {
-    setActive(menu);
     navigate(path);
   };
+  useEffect(() => {
+    const path = location.pathname;
+    const menu = URL.find((item) => item.path.includes(path));
+    if (menu) {
+      setActive(menu.menu);
+    }
+  }, [location.pathname]);
   return (
     <>
-      <div className="d_f j_c b_gw">
+      <div className="d_f j_c b_gw ">
         <div className={`d_f p_5 m_r20 menu_invest_item ${active === "total" ? "active" : ""}`} onClick={() => handleChangeMenuInvest("total", "/investment/assets/total")}>
           <img className="s_35" src={logoTotalAssets} />
           <div className="p_l10">

@@ -5,6 +5,7 @@ import { More } from "@mui/icons-material";
 import { useState } from "react";
 import AddCertificate from "@/app/components/modal/fundcertificate/AddCertificate";
 import ModifileCertificate from "@/app/components/modal/fundcertificate/ModifileCertificate";
+import SellCertificate from "@/app/components/modal/fundcertificate/SellCertificate";
 
 const FUND_CERTIFICATE_DATA = [
   {
@@ -66,6 +67,7 @@ const FUND_CERTIFICATE_DATA = [
 const FundCertificate = () => {
   const [openAddCertificate, setOpenAddCertificate] = useState(false);
   const [openModifileCertificate, setOpenModifileCertificate] = useState(false);
+  const [openSellCertificate, setOpenSellCertificate] = useState(false);
   const [searchCode, setSearchCode] = useState("");
   const [searchName, setSearchName] = useState("");
   const filteredData = FUND_CERTIFICATE_DATA.filter((item) => {
@@ -144,7 +146,7 @@ const FundCertificate = () => {
                       <div>2.09%</div>
                     </div>
                     <div className="d_f a_i">
-                      <Button variant="contained">Bán</Button>
+                      <Button variant="contained" size="small" onClick={() => setOpenSellCertificate(true)}>Bán</Button>
                       <More className="p_l10" onClick={() => setOpenModifileCertificate(true)} />
                     </div>
                   </div>
@@ -161,6 +163,10 @@ const FundCertificate = () => {
       <ModifileCertificate
         open={openModifileCertificate}
         setOpen={setOpenModifileCertificate}
+      />
+      <SellCertificate
+        open={openSellCertificate}
+        setOpen={setOpenSellCertificate}
       />
     </>
   );

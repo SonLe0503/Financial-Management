@@ -175,8 +175,11 @@
   border: 1px solid rgba(255, 175, 0, 1);
 }
 .scroll {
-  max-height: 300px; /* Giới hạn chiều cao */
-  overflow-y: auto;  /* Thêm thanh cuộn dọc */
+  max-height: 300px; 
+  overflow-y: auto;
+}
+.scroll::-webkit-scrollbar {
+  display: none;
 }
 .scroll_spend {
   max-height: 328.5px;
@@ -186,9 +189,18 @@
   max-height: 178.8px;
   overflow-y: auto;
 }
+.scroll_bank::-webkit-scrollbar {
+  display: none;
+}
+.scroll_spend::-webkit-scrollbar {
+  display: none;
+}
 .srcoll_bank_right {
   max-height: 290.05px;
   overflow-y: auto;
+}
+.srcoll_bank_right::-webkit-scrollbar {
+  display: none;
 }
 .m_h500p {
   max-width: 500px;
@@ -201,3 +213,4 @@
   max-height: 380px;
   overflow-y: auto;
 }
+
