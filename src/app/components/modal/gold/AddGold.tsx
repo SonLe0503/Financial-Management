@@ -1,9 +1,6 @@
-
 import { Box, IconButton, Typography, Button } from "@mui/material";
 import { Modal } from "@mui/material";
 import CloseIcon from "@mui/icons-material/Close";
-import { LocalizationProvider } from "@mui/x-date-pickers";
-import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
 import { DatePickerV2 as DatePicker } from "@/app/components/common/DatePickerV2";
 import dayjs from "dayjs";
 import { useState } from "react";
@@ -81,17 +78,15 @@ const AddGold = (props: AddGoldProps) => {
             placeholder="Giá trị"
           />
           <div className="b_1 p_10 b_r15 m_t5">
-            <LocalizationProvider dateAdapter={AdapterDayjs}>
-              <DatePicker
-                className="w_100"
-                value={selectedDate ? dayjs(selectedDate) : null}
-                onChange={(date: string) => {
-                  if (date) {
-                    setSelectedDate(dayjs(date).format("YYYY-MM-DD HH:mm"));
-                  }
-                }}
-              />
-            </LocalizationProvider>
+            <DatePicker
+              className="w_100"
+              value={selectedDate ? dayjs(selectedDate) : null}
+              onChange={(date: string) => {
+                if (date) {
+                  setSelectedDate(dayjs(date).format("YYYY-MM-DD HH:mm"));
+                }
+              }}
+            />
           </div>
           <div className="d_f m_t20">
             <Button className="w_100" variant="contained">

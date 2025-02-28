@@ -2,8 +2,6 @@
 import { Button } from "@mui/material";
 import ImageIcon from "@mui/icons-material/Image";
 import { DatePickerV2 as DatePicker } from "@/app/components/common/DatePickerV2";
-import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
-import { LocalizationProvider } from "@mui/x-date-pickers";
 import { useState } from "react";
 import dayjs from "dayjs";
 import fooddrink from "@/assets/images/spends/spend_fooddrink.png";
@@ -67,7 +65,6 @@ const Spend = () => {
                   onChange={(e) => setInput({ ...input, note: e.target.value })}
                 />
                 <div className="b_gw p_10 b_r15 m_t5">
-                  <LocalizationProvider dateAdapter={AdapterDayjs}>
                     <DatePicker
                       className="w_100"
                       value={input.date ? dayjs(input.date) : null}
@@ -77,16 +74,17 @@ const Spend = () => {
                         }
                       }}
                     />
-                  </LocalizationProvider>
                 </div>
                 <button
                   className="p_20 b_r15 m_t5 b_gw a_i d_f"
                   onClick={() => setOpenImageSelect(true)}
                 >
-                  {
-                    input.imageFile !== null ? <ImageIcon /> : ("")
-                  }
-                  Thêm hình ảnh
+                  <ImageIcon />
+                  <div className="p_l10">
+                    {input.imageFile === null
+                      ? "Thêm hình ảnh"
+                      : input.imageFile.name}
+                  </div>
                 </button>
               </div>
             </div>

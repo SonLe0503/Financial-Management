@@ -1,8 +1,6 @@
 import { Box, IconButton, Typography, Button } from "@mui/material";
 import { Modal } from "@mui/material";
 import CloseIcon from "@mui/icons-material/Close";
-import { LocalizationProvider } from "@mui/x-date-pickers";
-import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
 import { DatePickerV2 as DatePicker } from "@/app/components/common/DatePickerV2";
 import dayjs from "dayjs";
 import { useState } from "react";
@@ -66,7 +64,6 @@ const ModifileAccumulate = (props: ModifileAccumulateProps) => {
               placeholder="Mức lãi suất"
             />
             <div className="b_1 p_10 b_r15 m_t5">
-              <LocalizationProvider dateAdapter={AdapterDayjs}>
               <DatePicker
                 className="w_100"
                 value={selectedDate ? dayjs(selectedDate) : null}
@@ -76,7 +73,6 @@ const ModifileAccumulate = (props: ModifileAccumulateProps) => {
                   }
                 }}
               />
-            </LocalizationProvider>
             </div>
             <div className="d_f m_t20 j_cs">
               <Button className="w_48" variant="contained" color="success">Sửa</Button>

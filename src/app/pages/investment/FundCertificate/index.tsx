@@ -140,8 +140,6 @@ const FundCertificate = () => {
                     </div>
                     <div>
                       <div>{item.name}</div>
-                    </div>
-                    <div>
                       <div>19.688,69 đ</div>
                       <div>2.09%</div>
                     </div>

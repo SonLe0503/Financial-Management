@@ -213,4 +213,10 @@
   max-height: 380px;
   overflow-y: auto;
 }
+.text_red {
+  color: rgba(255, 42, 0, 1);
+}
+.text_green {
+  color: rgb(0, 255, 8);
+}
 
