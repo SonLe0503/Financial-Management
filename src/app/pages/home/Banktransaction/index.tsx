@@ -2,9 +2,11 @@
 import dayjs from "dayjs";
 import { useState } from "react";
 import { DatePickerV2 as DatePicker } from "@/app/components/common/DatePickerV2";
-import { Button } from "@mui/material";
+import { Button, styled } from "@mui/material";
 import ImageIcon from "@mui/icons-material/Image";
 import "@/styles/transactionbank.css";
+import * as XLSX from "xlsx";
+import CloudUploadIcon from "@mui/icons-material/CloudUpload";
 
 import fooddrink from "@/assets/images/spends/spend_fooddrink.png";
 import spend135 from "@/assets/images/spends/spend_135.png";
@@ -23,22 +25,22 @@ import lenddebt from "@/assets/images/lend/lend_debt.png";
 import lendloan from "@/assets/images/lend/lend_loan.png";
 import ImageFileSelect from "@/app/components/modal/ImageFileSelect";
 
-const BANK = [
-  {
-    id: 1,
-    deposit: 1000000,
-    withdraw: 0,
-    date: "2025-02-25 10:00",
-    detail: "CUSTOMER DO GIA BAO chuyển tiền. TU DO GIA BAO",
-  },
-  {
-    id: 2,
-    deposit: 0,
-    withdraw: 100000,
-    date: "2025-03-25 10:00",
-    detail: "LE VAN SON chuyển tiền",
-  },
-];
+// const BANK = [
+//   {
+//     id: 1,
+//     deposit: 1000000,
+//     withdraw: 0,
+//     date: "2025-02-25 10:00",
+//     detail: "CUSTOMER DO GIA BAO chuyển tiền. TU DO GIA BAO",
+//   },
+//   {
+//     id: 2,
+//     deposit: 0,
+//     withdraw: 100000,
+//     date: "2025-03-25 10:00",
+//     detail: "LE VAN SON chuyển tiền",
+//   },
+// ];
 
 const GROUP = [
   { id: 1, name: "Ăn uống", image: fooddrink, category: "spend" },
@@ -59,6 +61,8 @@ const GROUP = [
 ];
 
 const Bank = () => {
+  const [transactions, setTransactions] = useState<any>([]);
+  console.log(transactions);
   const [input, setInput] = useState<any>({
     money: "",
     note: "",
@@ -87,11 +91,46 @@ const Bank = () => {
     setInput({ ...input, money: money, date: date });
   };
 
+  const VisuallyHiddenInput = styled("input")({
+    clip: "rect(0 0 0 0)",
+    clipPath: "inset(50%)",
+    height: 1,
+    overflow: "hidden",
+    position: "absolute",
+    whiteSpace: "nowrap",
+    width: 1,
+  });
+
+  const handleFileUpLoad = (event: any) => {
+    const file = event.target.files[0];
+    if (!file) return;
+    const reader = new FileReader();
+    reader.onload = (e: any) => {
+      const binaryStr = e.target.result;
+      const workbook = XLSX.read(binaryStr, { type: "binary" });
+      const worksheet = workbook.Sheets[workbook.SheetNames[0]];
+      const range = worksheet["!ref"];
+      console.log("Phạm vi dữ liệu:", range);
+      const jsonData = XLSX.utils.sheet_to_json(worksheet, {range: "A19:V30"});
+      setTransactions(jsonData);
+      console.log(jsonData);
+    };
+    reader.readAsArrayBuffer(file);
+  };
+
   return (
     <>
       <div className="p_40">
         <div className="b_gw p_20 b_r20">
-          <div className="f_s20">Cập nhật lịch sử giao dịch từ ngân hàng</div>
+          <div className="f_s20 d_f j_cs">
+            <div>Cập nhật lịch sử giao dịch từ ngân hàng</div>
+            <div className="w_56 t_a">
+              <Button variant="contained" size="small" startIcon={<CloudUploadIcon />} component="label">
+                <VisuallyHiddenInput type="file" accept=".xlsx" onChange={handleFileUpLoad} />
+                File UpLoad
+              </Button>
+            </div>
+          </div>
           <div className="d_f p_t20 w_100 j_cs">
             <div className="w_40 b_g b_r20 ">
               <div className="p_20">
@@ -150,30 +189,34 @@ const Bank = () => {
             <div className="w_56 b_g b_r20">
               <div className="p_20">
                 <div className="srcoll_bank_right b_r15">
-                  {BANK.map((item) => (
-                    <div
-                      className="b_gw p_10 b_r15 a_i m_t5"
-                      onClick={() =>
-                        handleSelectOption(
-                          item.deposit > 0 ? item.deposit : item.withdraw,
-                          item.date
-                        )
-                      }
-                    >
-                      <div key={item.id}>
-                        <div>Thông báo biến động số dư</div>
-                        <div>
-                          TK: |GD:{" "}
-                          {item.deposit > 0 ? (
-                            <span>+{item.deposit}VND</span>
-                          ) : (
-                            <span>-{item.withdraw}VND</span>
-                          )}{" "}
-                          | {item.date} |ND: {item.detail}
+                  {transactions.length > 0 &&
+                    transactions.map((item: any) => (
+                      <div
+                        className="b_gw p_10 b_r15 a_i m_t5"
+                        onClick={() =>
+                          handleSelectOption(
+                            parseFloat((item["Phát sinh có\r\nCredit"] || "0").replace(/,/g, "")) > 0
+                              ? item["Phát sinh có\r\nCredit"]
+                              : item["Phát sinh nợ\r\nDebit"],
+                            item["Ngày giao dịch\r\nTransaction Date"]
+                          )
+                        }
+                      >
+                        <div key={item["STT\r\nNo"]}>
+                          <div>Thông báo biến động số dư</div>
+                          <div>
+                            TK: |GD:{" "}
+                            {parseFloat((item["Phát sinh có\r\nCredit"] || "0").replace(/,/g, "")) > 0 ? (
+                              <span>+{item["Phát sinh có\r\nCredit"]}VND</span>
+                            ) : (
+                              <span>-{item["Phát sinh nợ\r\nDebit"]}VND</span>
+                            )}{" "}
+                            | {item["Ngày giao dịch\r\nTransaction Date"]} |ND:{" "}
+                            {item["Nội dung\r\nDetails"]}
+                          </div>
                         </div>
                       </div>
-                    </div>
-                  ))}
+                    ))}
                 </div>
               </div>
             </div>
@@ -192,7 +235,7 @@ const Bank = () => {
                 </div>
                 <input className="p_10 b_r15 w_25" placeholder="Ghi chú" />
                 <div className="">
-                  <Button variant="contained">Lưu</Button>
+                  <Button variant="contained" size="small" className="w_100">Lưu</Button>
                 </div>
               </div>
               <div className="p_l10 p_r10 p_b10 d_f g_20">

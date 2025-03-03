@@ -5,19 +5,16 @@ import logo_coin from "@/assets/images/logo/logo_coin.png";
 import logo_vang from "@/assets/images/logo/logo_vang.png";
 import { Button } from "@mui/material";
 // import { Line } from "react-chartjs-2";
-import {
-  Chart as ChartJS,
-  CategoryScale,
-  LinearScale,
-  PointElement,
-  LineElement,
-  Title,
-  Tooltip,
-  Legend,
-} from "chart.js";
-import { Swiper, SwiperSlide } from "swiper/react";
-import "swiper/css";
-import "swiper/css/navigation";
+// import {
+//   Chart as ChartJS,
+//   CategoryScale,
+//   LinearScale,
+//   PointElement,
+//   LineElement,
+//   Title,
+//   Tooltip,
+//   Legend,
+// } from "chart.js";
 import { useNavigate } from "react-router-dom";
 import fooddrink from "@/assets/images/spends/spend_fooddrink.png";
 import spend135 from "@/assets/images/spends/spend_135.png";
@@ -58,15 +55,15 @@ const LEND = [
   { id: 3, image: lenddebt, name: "Cho vay", money: -100000 },
   { id: 4, image: lendloan, name: "Đi vay", money: +100000 },
 ];
-ChartJS.register(
-  CategoryScale,
-  LinearScale,
-  PointElement,
-  LineElement,
-  Title,
-  Tooltip,
-  Legend
-);
+// ChartJS.register(
+//   CategoryScale,
+//   LinearScale,
+//   PointElement,
+//   LineElement,
+//   Title,
+//   Tooltip,
+//   Legend
+// );
 
 // const data = {
 //   labels: ["1/2", "2/2", "3/2", "4/2", "5/2", "6/2"],
@@ -88,8 +85,10 @@ ChartJS.register(
 //     title: { display: true, text: "Biểu đồ chi tiêu" },
 //   },
 // };
+
 const Home = () => {
   const navigate = useNavigate();
+
   return (
     <>
       <div className="home_content">
@@ -312,26 +311,6 @@ const Home = () => {
                         className="p_20 h_90p d_f g_20 "
                         style={{ maxWidth: "500px" }}
                       >
-                        <Swiper>
-                          <SwiperSlide>
-                            <div className="b_g h_90p w_150p b_r15">
-                              <div className="p_20">
-                                <div>Tích luỹ</div>
-                                <div>Kỳ hạn 18 tháng</div>
-                                <div>7%/năm</div>
-                              </div>
-                            </div>
-                          </SwiperSlide>
-                          <SwiperSlide>
-                            <div className="b_g h_90p w_150p b_r15">
-                              <div className="p_20">
-                                <div>Tích luỹ</div>
-                                <div>Kỳ hạn 18 tháng</div>
-                                <div>7%/năm</div>
-                              </div>
-                            </div>
-                          </SwiperSlide>
-                        </Swiper>
                       </div>
                     </div>
                   </div>
