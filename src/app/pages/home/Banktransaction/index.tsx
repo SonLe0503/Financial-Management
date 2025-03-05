@@ -1,12 +1,12 @@
-/* eslint-disable @typescript-eslint/no-explicit-any */
 import dayjs from "dayjs";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { DatePickerV2 as DatePicker } from "@/app/components/common/DatePickerV2";
 import { Button, styled } from "@mui/material";
 import ImageIcon from "@mui/icons-material/Image";
 import "@/styles/transactionbank.css";
 import * as XLSX from "xlsx";
 import CloudUploadIcon from "@mui/icons-material/CloudUpload";
+import axios from "axios";
 
 import fooddrink from "@/assets/images/spends/spend_fooddrink.png";
 import spend135 from "@/assets/images/spends/spend_135.png";
@@ -25,22 +25,6 @@ import lenddebt from "@/assets/images/lend/lend_debt.png";
 import lendloan from "@/assets/images/lend/lend_loan.png";
 import ImageFileSelect from "@/app/components/modal/ImageFileSelect";
 
-// const BANK = [
-//   {
-//     id: 1,
-//     deposit: 1000000,
-//     withdraw: 0,
-//     date: "2025-02-25 10:00",
-//     detail: "CUSTOMER DO GIA BAO chuyển tiền. TU DO GIA BAO",
-//   },
-//   {
-//     id: 2,
-//     deposit: 0,
-//     withdraw: 100000,
-//     date: "2025-03-25 10:00",
-//     detail: "LE VAN SON chuyển tiền",
-//   },
-// ];
 
 const GROUP = [
   { id: 1, name: "Ăn uống", image: fooddrink, category: "spend" },
@@ -62,7 +46,6 @@ const GROUP = [
 
 const Bank = () => {
   const [transactions, setTransactions] = useState<any>([]);
-  console.log(transactions);
   const [input, setInput] = useState<any>({
     money: "",
     note: "",
@@ -111,24 +94,60 @@ const Bank = () => {
       const worksheet = workbook.Sheets[workbook.SheetNames[0]];
       const range = worksheet["!ref"];
       console.log("Phạm vi dữ liệu:", range);
-      const jsonData = XLSX.utils.sheet_to_json(worksheet, {range: "A19:V30"});
+      const jsonData = XLSX.utils.sheet_to_json(worksheet, {
+        range: "A19:V30",
+      });
       setTransactions(jsonData);
       console.log(jsonData);
     };
     reader.readAsArrayBuffer(file);
   };
+  const [extention, setExtention] = useState<any>([]);
 
+  useEffect(() => {
+    fetchTransactions();
+  }, []);
+
+  const fetchTransactions = async () => {
+    try {
+      const response = await axios.get(
+        "http://localhost:2000/data/transactions"
+      );
+      setExtention(response.data.data.transactions);
+    } catch (error) {
+      console.error("Lỗi khi tải dữ liệu:", error);
+    }
+  };
+
+  const downloadExtension = () => {
+    const link = document.createElement("a");
+    link.href = "http://localhost:2000/TransactionsExtention.zip";
+    link.download = "TransactionsExtension.zip";
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
+  };
   return (
     <>
       <div className="p_40">
         <div className="b_gw p_20 b_r20">
           <div className="f_s20 d_f j_cs">
             <div>Cập nhật lịch sử giao dịch từ ngân hàng</div>
-            <div className="w_56 t_a">
-              <Button variant="contained" size="small" startIcon={<CloudUploadIcon />} component="label">
-                <VisuallyHiddenInput type="file" accept=".xlsx" onChange={handleFileUpLoad} />
+            <div className="w_56 d_f j_cs">
+              <Button
+                variant="contained"
+                size="small"
+                startIcon={<CloudUploadIcon />}
+                component="label"
+              >
+                <VisuallyHiddenInput
+                  type="file"
+                  accept=".xlsx"
+                  onChange={handleFileUpLoad}
+                />
                 File UpLoad
               </Button>
+              <Button variant="contained" size="small" onClick={downloadExtension}>Tải extention</Button>
             </div>
           </div>
           <div className="d_f p_t20 w_100 j_cs">
@@ -195,7 +214,12 @@ const Bank = () => {
                         className="b_gw p_10 b_r15 a_i m_t5"
                         onClick={() =>
                           handleSelectOption(
-                            parseFloat((item["Phát sinh có\r\nCredit"] || "0").replace(/,/g, "")) > 0
+                            parseFloat(
+                              (item["Phát sinh có\r\nCredit"] || "0").replace(
+                                /,/g,
+                                ""
+                              )
+                            ) > 0
                               ? item["Phát sinh có\r\nCredit"]
                               : item["Phát sinh nợ\r\nDebit"],
                             item["Ngày giao dịch\r\nTransaction Date"]
@@ -206,13 +230,30 @@ const Bank = () => {
                           <div>Thông báo biến động số dư</div>
                           <div>
                             TK: |GD:{" "}
-                            {parseFloat((item["Phát sinh có\r\nCredit"] || "0").replace(/,/g, "")) > 0 ? (
+                            {parseFloat(
+                              (item["Phát sinh có\r\nCredit"] || "0").replace(
+                                /,/g,
+                                ""
+                              )
+                            ) > 0 ? (
                               <span>+{item["Phát sinh có\r\nCredit"]}VND</span>
                             ) : (
                               <span>-{item["Phát sinh nợ\r\nDebit"]}VND</span>
                             )}{" "}
                             | {item["Ngày giao dịch\r\nTransaction Date"]} |ND:{" "}
                             {item["Nội dung\r\nDetails"]}
+                          </div>
+                        </div>
+                      </div>
+                    ))}
+                  {extention.length > 0 &&
+                    extention.map((item: any) => (
+                      <div className="b_gw p_10 b_r15 a_i m_t5">
+                        <div key={item.id}>
+                          <div>Thông báo biến động số dư</div>
+                          <div>
+                            TK: |GD: {item.amount} | {item.date} |ND:{" "}
+                            {item.description}
                           </div>
                         </div>
                       </div>
@@ -235,7 +276,9 @@ const Bank = () => {
                 </div>
                 <input className="p_10 b_r15 w_25" placeholder="Ghi chú" />
                 <div className="">
-                  <Button variant="contained" size="small" className="w_100">Lưu</Button>
+                  <Button variant="contained" size="small" className="w_100">
+                    Lưu
+                  </Button>
                 </div>
               </div>
               <div className="p_l10 p_r10 p_b10 d_f g_20">
