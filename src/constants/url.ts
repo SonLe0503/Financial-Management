@@ -3,6 +3,7 @@
 
 const URL = {
   Home: "/",
+  Login: "/login",
   Total: "/investment/assets/total",
   Accumulate: "/investment/assets/accumulate",
   FundCertificate: "/investment/assets/fundcertificate",

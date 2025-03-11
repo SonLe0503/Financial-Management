@@ -1,11 +1,13 @@
+/* eslint-disable @typescript-eslint/no-unused-vars */
 /* eslint-disable @typescript-eslint/no-explicit-any */
 
 import { Routes, Route } from "react-router-dom"
 import { lazy, Suspense } from "react";
 import DefaultLayout from "@/app/layouts/DefaultLayout";
 import InvestLayout from "@/app/layouts/InvestLayout";
-import { DEFAULT_LAYOUT,INVEST_LAYOUT } from "@/constants/layout";
+import { DEFAULT_LAYOUT,INVEST_LAYOUT, NONE_LAYOUT } from "@/constants/layout";
 import URL from "@/constants/url";
+import NoneLayout from "@/app/layouts/NoneLayout";
 
 const Home = lazy(() => import("@/app/pages/home"));
 const Spend = lazy(() => import("@/app/pages/home/Spend"));
@@ -19,6 +21,17 @@ const Bank = lazy(() => import("@/app/pages/home/Banktransaction"));
 const Log = lazy(() => import("@/app/pages/home/Transactionlog"));
 const Notification = lazy(() => import("@/app/pages/notifications"));
 const Market = lazy(() => import("@/app/pages/market"));
+const Login = lazy(() => import("@/app/pages/login"))
+
+
+const menuShared  = [
+  {
+    key: URL.Login,
+    components: <Login/>,
+    layout: NONE_LAYOUT,
+    private: false,
+  }
+]
 
 const menuInvest = [
   {
@@ -96,7 +109,7 @@ const menuDefault = [
     private: true,
   },
 ];
-const menus = [...menuInvest, ...menuDefault];
+const menus = [...menuShared, ...menuInvest, ...menuDefault];
 const Routers = () => {
   return (
     <Routes>
@@ -108,6 +121,9 @@ const Routers = () => {
         }
         if (item.layout === INVEST_LAYOUT){
           element = <InvestLayout>{element}</InvestLayout>
+        }
+        if (item.layout === NONE_LAYOUT) {
+          element = <NoneLayout>{element}</NoneLayout>
         }
         return (
           <Route key={item.key} path={item.key} element={element} />

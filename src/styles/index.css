@@ -16,6 +16,9 @@
  .w_100 {
   width: 100%;
  }
+ .h_100vh {
+  height: 100vh;
+ }
  .h_100 {
   height: 100%;
  }
@@ -138,6 +141,9 @@
   margin-top: 20px;
   margin-bottom: 20px;
  }
+ .m_t40 {
+  margin-top: 40px;
+ }
  .m_t20 {
   margin-top: 20px;
  }
@@ -149,6 +155,9 @@
 }
 .w_500p {
   width: 500px;
+}
+.b_sx {
+  box-shadow: 0 6px 10px rgba(0, 0, 0, 0.5);
 }
 .b_s {
   box-shadow:  0 2px rgba(0, 208, 255, 0.9);
@@ -219,4 +228,6 @@
 .text_green {
   color: rgb(0, 255, 8);
 }
-
+.b_bi {
+  border: 1px solid rgba(0, 0, 0, 0.2);
+}

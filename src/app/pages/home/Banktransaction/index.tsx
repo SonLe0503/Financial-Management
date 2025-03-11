@@ -1,12 +1,20 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
+declare const chrome: any;
 import dayjs from "dayjs";
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import { DatePickerV2 as DatePicker } from "@/app/components/common/DatePickerV2";
-import { Button, styled } from "@mui/material";
+import {
+  Button,
+  MenuItem,
+  FormControl,
+  Select,
+  styled,
+  InputLabel,
+} from "@mui/material";
 import ImageIcon from "@mui/icons-material/Image";
 import "@/styles/transactionbank.css";
 import * as XLSX from "xlsx";
 import CloudUploadIcon from "@mui/icons-material/CloudUpload";
-import axios from "axios";
 
 import fooddrink from "@/assets/images/spends/spend_fooddrink.png";
 import spend135 from "@/assets/images/spends/spend_135.png";
@@ -25,7 +33,6 @@ import lenddebt from "@/assets/images/lend/lend_debt.png";
 import lendloan from "@/assets/images/lend/lend_loan.png";
 import ImageFileSelect from "@/app/components/modal/ImageFileSelect";
 
-
 const GROUP = [
   { id: 1, name: "Ăn uống", image: fooddrink, category: "spend" },
   { id: 2, name: "Hoá đơn", image: spend135, category: "spend" },
@@ -43,9 +50,8 @@ const GROUP = [
   { id: 14, name: "Cho vay", image: lenddebt, category: "lend" },
   { id: 15, name: "Đi vay", image: lendloan, category: "lend" },
 ];
-
+const banks = ["MBbank", "Techcombank", "Vietcombank", "BIDV", "TPBank"];
 const Bank = () => {
-  const [transactions, setTransactions] = useState<any>([]);
   const [input, setInput] = useState<any>({
     money: "",
     note: "",
@@ -54,10 +60,12 @@ const Bank = () => {
     name: "Chọn nhóm",
     image: "",
   });
-
+  const [transactions, setTransactions] = useState<any>([]);
   const [openImageSelect, setOpenImageSelect] = useState<boolean>(false);
-
   const [selectedCategory, setSelectedCategory] = useState<string>("spend");
+  const [selectedBank, setSelectedBank] = useState<string>("");
+  const [extentionBank, setExtentionBank] = useState<any[]>([]);
+  console.log(extentionBank);
   const filterGroup = GROUP.filter(
     (item) => item.category === selectedCategory
   );
@@ -69,9 +77,11 @@ const Bank = () => {
   const handleSelectGpup = (image: any, name: string) => {
     setInput({ ...input, image: image, name: name });
   };
-
-  const handleSelectOption = (money: number, date: string) => {
+  const handleSelectOptionExcel = (id: number, money: number, date: string) => {
     setInput({ ...input, money: money, date: date });
+    setTransactions((prev: any) =>
+      prev.filter((item: any) => item["STT\r\nNo"] !== id)
+    );
   };
 
   const VisuallyHiddenInput = styled("input")({
@@ -102,31 +112,40 @@ const Bank = () => {
     };
     reader.readAsArrayBuffer(file);
   };
-  const [extention, setExtention] = useState<any>([]);
+  const token = chrome.storage.local.get(["token"]);
+  console.log("token",token);
+  const handleChange = async (event: any) => {
+    const bank = event.target.value;
+    setSelectedBank(bank);
 
-  useEffect(() => {
-    fetchTransactions();
-  }, []);
-
-  const fetchTransactions = async () => {
     try {
-      const response = await axios.get(
-        "http://localhost:2000/data/transactions"
-      );
-      setExtention(response.data.data.transactions);
+      chrome.storage.local.get(["token"], async (result: any) => {
+        const token = result.token;
+        if (!token) {
+          console.error("Không tìm thấy token!");
+          return;
+        }
+  
+        console.log("Token lấy từ Chrome:", token);
+  
+        const response = await fetch(
+          `http://localhost:2000/bank/user/bank/${bank}`,
+          {
+            method: "GET",
+            headers: {
+              Authorization: `Bearer ${token}`,
+            },
+          }
+        );
+  
+        const data = await response.json();
+        setExtentionBank(data); 
+      });
     } catch (error) {
-      console.error("Lỗi khi tải dữ liệu:", error);
+      console.error("Lỗi khi lấy dữ liệu:", error);
     }
   };
 
-  const downloadExtension = () => {
-    const link = document.createElement("a");
-    link.href = "http://localhost:2000/TransactionsExtention.zip";
-    link.download = "TransactionsExtension.zip";
-    document.body.appendChild(link);
-    link.click();
-    document.body.removeChild(link);
-  };
   return (
     <>
       <div className="p_40">
@@ -147,7 +166,23 @@ const Bank = () => {
                 />
                 File UpLoad
               </Button>
-              <Button variant="contained" size="small" onClick={downloadExtension}>Tải extention</Button>
+              <FormControl className="w_40">
+                <InputLabel>Bank</InputLabel>
+                <Select value={selectedBank} onChange={handleChange}>
+                  {banks.map((bank) => (
+                    <MenuItem key={bank} value={bank}>
+                      {bank}
+                    </MenuItem>
+                  ))}
+                </Select>
+              </FormControl>
+              <Button
+                variant="contained"
+                size="small"
+                // onClick={downloadExtension}
+              >
+                Tải extention
+              </Button>
             </div>
           </div>
           <div className="d_f p_t20 w_100 j_cs">
@@ -213,7 +248,8 @@ const Bank = () => {
                       <div
                         className="b_gw p_10 b_r15 a_i m_t5"
                         onClick={() =>
-                          handleSelectOption(
+                          handleSelectOptionExcel(
+                            item["STT\r\nNo"],
                             parseFloat(
                               (item["Phát sinh có\r\nCredit"] || "0").replace(
                                 /,/g,
@@ -229,7 +265,7 @@ const Bank = () => {
                         <div key={item["STT\r\nNo"]}>
                           <div>Thông báo biến động số dư</div>
                           <div>
-                            TK: |GD:{" "}
+                            GD:{" "}
                             {parseFloat(
                               (item["Phát sinh có\r\nCredit"] || "0").replace(
                                 /,/g,
@@ -242,18 +278,6 @@ const Bank = () => {
                             )}{" "}
                             | {item["Ngày giao dịch\r\nTransaction Date"]} |ND:{" "}
                             {item["Nội dung\r\nDetails"]}
-                          </div>
-                        </div>
-                      </div>
-                    ))}
-                  {extention.length > 0 &&
-                    extention.map((item: any) => (
-                      <div className="b_gw p_10 b_r15 a_i m_t5">
-                        <div key={item.id}>
-                          <div>Thông báo biến động số dư</div>
-                          <div>
-                            TK: |GD: {item.amount} | {item.date} |ND:{" "}
-                            {item.description}
                           </div>
                         </div>
                       </div>
