@@ -310,8 +310,7 @@ const Home = () => {
                       <div
                         className="p_20 h_90p d_f g_20 "
                         style={{ maxWidth: "500px" }}
-                      >
-                      </div>
+                      ></div>
                     </div>
                   </div>
                 </div>

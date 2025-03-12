@@ -21,13 +21,20 @@ const Bank = lazy(() => import("@/app/pages/home/Banktransaction"));
 const Log = lazy(() => import("@/app/pages/home/Transactionlog"));
 const Notification = lazy(() => import("@/app/pages/notifications"));
 const Market = lazy(() => import("@/app/pages/market"));
-const Login = lazy(() => import("@/app/pages/login"))
+const Login = lazy(() => import("@/app/pages/login"));
+const Register = lazy(() => import("@/app/pages/register"));
 
 
 const menuShared  = [
   {
     key: URL.Login,
     components: <Login/>,
+    layout: NONE_LAYOUT,
+    private: false,
+  },
+  {
+    key: URL.Register,
+    components: <Register/>,
     layout: NONE_LAYOUT,
     private: false,
   }

@@ -1,5 +1,4 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
-declare const chrome: any;
 import dayjs from "dayjs";
 import { useState } from "react";
 import { DatePickerV2 as DatePicker } from "@/app/components/common/DatePickerV2";
@@ -32,6 +31,7 @@ import lend141 from "@/assets/images/lend/lend_141.png";
 import lenddebt from "@/assets/images/lend/lend_debt.png";
 import lendloan from "@/assets/images/lend/lend_loan.png";
 import ImageFileSelect from "@/app/components/modal/ImageFileSelect";
+import request from "@/util/request";
 
 const GROUP = [
   { id: 1, name: "Ăn uống", image: fooddrink, category: "spend" },
@@ -112,35 +112,22 @@ const Bank = () => {
     };
     reader.readAsArrayBuffer(file);
   };
-  const token = chrome.storage.local.get(["token"]);
-  console.log("token",token);
+
   const handleChange = async (event: any) => {
     const bank = event.target.value;
     setSelectedBank(bank);
 
     try {
-      chrome.storage.local.get(["token"], async (result: any) => {
-        const token = result.token;
-        if (!token) {
-          console.error("Không tìm thấy token!");
-          return;
-        }
-  
-        console.log("Token lấy từ Chrome:", token);
-  
-        const response = await fetch(
-          `http://localhost:2000/bank/user/bank/${bank}`,
-          {
-            method: "GET",
-            headers: {
-              Authorization: `Bearer ${token}`,
-            },
-          }
-        );
-  
-        const data = await response.json();
-        setExtentionBank(data); 
+      const token = localStorage.getItem("token");
+      const response = await request({
+        method: "GET",
+        url: `/transaction/user/bank/${bank}`,
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
       });
+      const data = response.data;
+      setExtentionBank(data);
     } catch (error) {
       console.error("Lỗi khi lấy dữ liệu:", error);
     }
@@ -282,6 +269,21 @@ const Bank = () => {
                         </div>
                       </div>
                     ))}
+                    {extentionBank.length > 0 &&
+                      extentionBank.map((item: any) => (
+                        <div
+                        className="b_gw p_10 b_r15 a_i m_t5"
+                      >
+                        <div key={item.id}>
+                          <div>Thông báo biến động số dư</div>
+                          <div>
+                            GD:{" "} {item.amount}{" "} VND
+                            | {item.date} |ND:{" "}
+                            {item.description}
+                          </div>
+                        </div>
+                      </div>
+                      ))}
                 </div>
               </div>
             </div>
